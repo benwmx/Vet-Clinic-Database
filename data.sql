@@ -52,28 +52,3 @@ VALUES
 ('Angemon', '2005-06-12', 1, TRUE, -45),
 ('Boarmon', '2005-06-07', 7, TRUE, 20.4),
 ('Blossom', '1998-10-13', 3, TRUE, 17);
-
--- Transactions--
-BEGIN;
-UPDATE animals SET species = 'unspecified';
-SELECT species FROM animals;
-ROLLBACK;
-
-BEGIN;
-UPDATE animals SET species = 'digimon' WHERE name LIKE '%mon';
-UPDATE animals SET species = 'pokemon' WHERE species IS NULL;
-COMMIT;
-SELECT * FROM animals;
-
-BEGIN;
-DELETE FROM animals;
-ROLLBACK;
-SELECT * FROM animals;
-
-BEGIN;
-DELETE FROM animals WHERE date_of_birth > '2022-01-01';
-SAVEPOINT after_deletion;
-UPDATE animals SET weight_kg = weight_kg * -1;
-ROLLBACK TO after_deletion;
-UPDATE animals SET weight_kg = weight_kg * -1 WHERE weight_kg < 0;
-COMMIT;
