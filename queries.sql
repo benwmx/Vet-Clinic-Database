@@ -77,3 +77,59 @@ FROM owners o JOIN (
 ) ON o.id = a.owner_id
 GROUP BY o.full_name
 ORDER BY number_of_animals DESC;
+
+-- Complex questions
+
+SELECT vet.name vet_name, a.name animal_name, v.date_of_visit date_of_visit
+FROM vets vet JOIN (
+  animals a JOIN visits v ON a.id = v.animal_id
+) ON vet.id = v.vet_id
+WHERE vet.name = 'William Tatcher'
+ORDER BY v.date_of_visit DESC;
+
+SELECT vet.name vet_name, a.name animal_name
+FROM vets vet JOIN (
+  animals a JOIN visits v ON a.id = v.animal_id
+) ON vet.id = v.vet_id
+WHERE vet.name = 'Stephanie Mendez';
+
+SELECT vet.name vet_name, s.name
+FROM vets vet LEFT JOIN (
+  species s JOIN specializations sp ON s.id = sp.species_id
+) ON vet.id = sp.vet_id;
+
+SELECT vet.name vet_name, a.name animal_name, v.date_of_visit
+FROM vets vet JOIN (
+  animals a JOIN visits v ON a.id = v.animal_id
+) ON vet.id = v.vet_id
+WHERE vet.name = 'Stephanie Mendez' AND  v.date_of_visit BETWEEN '2020-04-01' AND '2020-08-30';
+
+SELECT a.name animal_name, COUNT(v.id) number_of_visits
+FROM animals a JOIN visits v ON a.id = v.animal_id
+GROUP BY a.name
+ORDER BY number_of_visits DESC;
+
+SELECT vet.name vet_name, a.name animal_name, v.date_of_visit
+FROM vets vet JOIN (
+  animals a JOIN visits v ON a.id = v.animal_id
+) ON vet.id = v.vet_id
+WHERE vet.name = 'Maisy Smith'
+ORDER BY v.date_of_visit ASC;
+
+SELECT a.name animal_name, a.date_of_birth, a.escape_attempts, a.neutred, a.weight_kg, s.name species_name, vet.name vet_name, vet.age vet_age, vet.date_of_graduation, v.date_of_visit
+FROM (visits v JOIN vets vet ON v.vet_id = vet.id)
+JOIN (animals a JOIN species s ON a.species_id = s.id)
+ON v.animal_id = a.id
+ORDER BY v.date_of_visit DESC;
+
+SELECT COUNT(*) visits_without_specialized_vets
+FROM (animals a JOIN visits v ON a.id = v.animal_id)
+JOIN (vets vet JOIN specializations s ON vet.id = s.vet_id)
+ON vet.id = v.vet_id
+WHERE s.species_id != a.species_id;
+
+SELECT vet.name vet_name, s.name species_name
+FROM (vets vet JOIN visits v ON vet.id = v.vet_id)
+JOIN (species s JOIN animals a ON s.id = a.species_id)
+ON a.id = v.animal_id
+WHERE vet.name = 'Maisy Smith';
